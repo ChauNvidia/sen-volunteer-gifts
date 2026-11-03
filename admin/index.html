@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="no-referrer">
+<title>SEN Gift Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#000744;--blue:#3162F5;--green:#C9FFCD;--bg:#F4F6FB;--ink:#1a1d3a;--mute:#5b6080;--line:#e2e6f3}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,sans-serif;color:var(--ink);background:var(--bg)}
+[hidden]{display:none!important}
+.login{max-width:420px;margin:12vh auto;background:#fff;border-radius:18px;padding:36px;box-shadow:0 10px 40px rgba(0,7,68,.1);text-align:center}
+.login img{height:44px;margin-bottom:18px}.login h1{font-family:Newsreader,serif;font-size:30px;color:var(--navy);margin:0 0 8px}
+.login p{color:var(--mute);line-height:1.5}
+input,select,textarea{font:15px Inter;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%}
+input:focus,select:focus,textarea:focus{outline:3px solid rgba(49,98,245,.22);border-color:var(--blue)}
+.btn{background:var(--navy);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:500 14px Inter;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line)}.btn.sm{padding:7px 12px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.app>aside{background:var(--navy);color:#cfd6ff;padding:24px 14px}
+.app>aside img{height:40px;display:block;margin:0 8px 26px}
+.app>aside button{display:block;width:100%;text-align:left;padding:11px 14px;border-radius:10px;color:#cfd6ff;background:none;border:0;font:15px Inter;cursor:pointer;margin-bottom:4px}
+.app>aside button.on{background:rgba(255,255,255,.12);color:#fff;font-weight:500}
+.app>aside .who{font-size:12px;margin:24px 8px 0;opacity:.75;word-break:break-all}
+.app>aside .who a{color:#fff;cursor:pointer;text-decoration:underline}
+main{padding:26px 34px 70px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-family:Newsreader,serif;font-size:34px;margin:0;color:var(--navy)}
+.stats{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-bottom:22px}
+.stat{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,7,68,.05)}
+.stat b{display:block;font-size:25px;color:var(--navy);font-family:Newsreader,serif}.stat span{font-size:12px;color:var(--mute)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{background:none;border:0;padding:10px 14px;font:500 14px Inter;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--navy);border-color:var(--blue)}
+.bar input.q{width:250px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,7,68,.05)}
+th{text-align:left;font-size:12px;color:var(--mute);font-weight:500;padding:12px 14px;background:#fafbff;border-bottom:1px solid var(--line)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+tr.row{cursor:pointer}tr.row:hover{background:#f7f9ff}
+.gift{display:flex;align-items:center;gap:10px}.gift img{width:42px;height:42px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:8px}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap}
+.p-to_order{background:#fff1c9;color:#7a5600}.p-ordered{background:#dbe6ff;color:#1c3fa6}.p-completed{background:#c9ffcd;color:#126b25}.p-waiting{background:#eceef6;color:var(--mute)}
+.addr{color:var(--mute);line-height:1.35}
+.amz{display:inline-block;background:#FFD814;color:#111;text-decoration:none;font-weight:600;font-size:13px;padding:7px 13px;border-radius:99px;white-space:nowrap}
+.panel{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:100%;background:#fff;box-shadow:-10px 0 40px rgba(0,7,68,.2);padding:28px;overflow:auto;transform:translateX(110%);transition:.25s;z-index:5}
+.panel.open{transform:none}.panel .x{position:absolute;top:14px;right:18px;background:none;border:0;font-size:28px;cursor:pointer;color:var(--mute)}
+.panel h2{font-family:Newsreader,serif;font-size:28px;margin:0 0 2px;color:var(--navy)}.panel .em{color:var(--mute);font-size:14px;margin-bottom:18px}
+.pg{display:flex;gap:14px;align-items:center;background:var(--bg);border-radius:12px;padding:12px;margin-bottom:12px}
+.pg img{width:78px;height:78px;object-fit:contain;background:#fff;border-radius:10px}.pg b{display:block;margin-bottom:6px}
+.box{border:1.5px dashed #b9c3ee;border-radius:12px;padding:14px 16px;line-height:1.5;margin:8px 0 12px;white-space:pre-line;font-size:15px}
+label{font-size:13px;font-weight:500;display:block;margin:12px 0 5px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 14px}
+.seg button{padding:11px 6px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font:500 13px Inter;cursor:pointer}
+.seg button.on{border-color:var(--blue);background:#eef3ff;color:var(--navy)}
+.danger{background:none;border:0;color:#b0281b;font:500 13px Inter;cursor:pointer;padding:0;margin-top:18px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;opacity:0;transition:.2s;pointer-events:none;z-index:99}.toast.on{opacity:1}
+.empty{text-align:center;color:var(--mute);padding:40px}.note{font-size:13px;color:var(--mute);margin:12px 0}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,7,68,.05);margin-bottom:18px;max-width:760px}
+.card h3{margin:0 0 12px;font-family:Newsreader,serif;font-size:22px;color:var(--navy)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.modal{position:fixed;inset:0;background:rgba(0,7,68,.45);display:grid;place-items:center;z-index:20;padding:16px}
+.modal>div{background:#fff;border-radius:16px;padding:26px;width:560px;max-width:100%;max-height:92vh;overflow:auto}
+.modal h3{margin:0 0 6px;font-family:Newsreader,serif;font-size:26px;color:var(--navy)}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap}
+.thumb{width:84px;height:84px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:10px}
+.tag{font-size:12px;color:var(--mute)}
+@media(max-width:1100px){.stats{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:820px){.app{grid-template-columns:1fr}.app>aside{display:flex;flex-wrap:wrap;gap:4px;padding:12px}.app>aside img,.app>aside .who{display:none}.app>aside button{width:auto}main{padding:18px 12px}.stats{grid-template-columns:repeat(2,1fr)}table{display:block;overflow-x:auto}.grid2{grid-template-columns:1fr}}
+</style></head><body>
+
+<div class="login" id="login">
+  <img src="../images/sen-logo.png" alt="Scholars Equity Network">
+  <h1>Gift dashboard</h1>
+  <div id="loginForm">
+    <p>Enter your admin email and we'll send you a sign-in link. No password needed.</p>
+    <input id="email" type="email" placeholder="you@example.com" autocomplete="email" aria-label="Admin email">
+    <p><button class="btn" id="send" style="width:100%">Email me a sign-in link</button></p>
+  </div>
+  <p id="loginMsg" role="status"></p>
+</div>
+
+<div class="app" id="app" hidden>
+<aside>
+  <img src="../images/sen-logo-white.png" alt="Scholars Equity Network">
+  <button data-tab="responses" class="on">🎁 Responses</button>
+  <button data-tab="gifts">🛍️ Gifts</button>
+  <button data-tab="people">👥 Volunteers</button>
+  <button data-tab="settings">⚙️ Campaign</button>
+  <div class="who"><span id="who"></span><br><a id="signout">Sign out</a></div>
+</aside>
+<main>
+  <div class="top"><h1 id="title">Volunteer Gift Campaign</h1>
+    <div class="row-actions"><select id="campSel" style="width:auto;min-width:230px" aria-label="Campaign"></select><button class="btn ghost" id="newCamp">＋ New campaign</button></div></div>
+  <section id="t-responses">
+    <div class="stats" id="stats"></div>
+    <div class="bar"><div class="tabs" id="tabs"></div><div class="row-actions"><input class="q" id="q" placeholder="Search volunteers…" aria-label="Search"><button class="btn ghost" id="csv">⬇ Export CSV</button></div></div>
+    <table><thead><tr><th>Volunteer</th><th>Selected gift</th><th>Shipping address</th><th>Submitted</th><th>Status</th><th>Amazon</th></tr></thead><tbody id="rows"></tbody></table>
+    <p class="note">Click any row to open it, copy the address and mark it ordered.</p>
+  </section>
+  <section id="t-gifts" hidden>
+    <div class="bar"><p class="note" style="margin:0">Volunteers see the photo, name and description. Prices and Amazon links stay private.</p><button class="btn" id="addGift">＋ Add a gift</button></div>
+    <table><thead><tr><th>Gift</th><th>Amazon link</th><th>Est. price</th><th>Shown?</th><th></th></tr></thead><tbody id="giftRows"></tbody></table>
+  </section>
+  <section id="t-people" hidden>
+    <div class="bar"><p class="note" style="margin:0">Each volunteer gets their own private link. Copy it or open a ready-to-send email.</p>
+      <div class="row-actions"><button class="btn ghost" id="copyAll">Copy all links</button><button class="btn" id="addPeople">＋ Add volunteers</button></div></div>
+    <table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Invitation</th><th></th></tr></thead><tbody id="peopleRows"></tbody></table>
+  </section>
+  <section id="t-settings" hidden>
+    <div class="card"><h3>Campaign settings</h3>
+      <label for="sName">Campaign name</label><input id="sName">
+      <label for="sMsg">Thank-you message volunteers see</label><textarea id="sMsg" rows="4"></textarea>
+      <div class="grid2"><div><label for="sStatus">Status</label><select id="sStatus"><option value="draft">Draft (nobody can claim yet)</option><option value="open">Open</option><option value="closed">Closed (no new claims)</option><option value="archived">Archived</option></select></div>
+        <div><label for="sBudget">Gift budget (optional, $)</label><input id="sBudget" type="number" min="0" step="0.01"></div></div>
+      <p><button class="btn" id="saveCamp">Save changes</button></p>
+    </div>
+    <div class="card"><h3>Clean up</h3><p class="note">After everything is delivered, you can remove all addresses from this campaign. The gift choices and statuses stay for your records.</p>
+      <button class="btn ghost" id="scrubAll">Delete all addresses in this campaign</button></div>
+  </section>
+</main></div>
+
+<aside class="panel" id="panel" aria-label="Details"></aside>
+<div id="modal" hidden></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
+<script src="../config.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const sb = supabase.createClient(SEN_CONFIG.SUPABASE_URL, SEN_CONFIG.SUPABASE_KEY, { auth: { persistSession: true, detectSessionInUrl: true } });
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const LABEL = { to_order: "To Order", ordered: "Ordered", completed: "Completed", waiting: "Not yet responded" };
+const ROOT = new URL("../", location.href).href;          // the volunteer page lives one folder up
+const linkFor = t => ROOT + "?t=" + t;
+const imgUrl = u => !u ? "" : /^https?:/.test(u) ? u : ROOT + u;
+const money = n => n == null || n === "" ? "—" : "$" + Number(n).toFixed(2);
+const fmt = d => new Date(d).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
+function toast(t) { const e = $("toast"); e.textContent = t; e.classList.add("on"); setTimeout(() => e.classList.remove("on"), 1800); }
+async function copy(text, ok) { try { await navigator.clipboard.writeText(text); toast(ok); } catch (e) { toast("Couldn't copy. Select the text and copy it instead."); } }
+function fail(error, what) { console.warn(what, error && error.message); toast("Something went wrong: " + what); }
+
+let campaigns = [], camp = null, gifts = [], people = [], resps = [], filter = "all", q = "", openId = null, tab = "responses";
+
+/* ---------- sign in ---------- */
+$("send").onclick = async () => {
+  const email = $("email").value.trim(); if (!email) return;
+  $("send").disabled = true;
+  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true } });
+  $("send").disabled = false;
+  $("loginMsg").textContent = error ? "Couldn't send the link. Please try again in a minute." : "Check your email for a sign-in link, then click it.";
+};
+$("email").addEventListener("keydown", e => { if (e.key === "Enter") $("send").click(); });
+$("signout").onclick = async () => { await sb.auth.signOut(); location.href = location.pathname; };
+
+async function boot() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { $("login").hidden = false; $("app").hidden = true; return; }
+  const { data: ok } = await sb.rpc("am_i_admin");
+  if (!ok) {
+    $("loginForm").hidden = true; $("login").hidden = false; $("app").hidden = true;
+    $("loginMsg").innerHTML = "You're signed in as <b>" + esc(session.user.email) + "</b>, but this email isn't an admin for this dashboard.<br><br><a href='#' id='so2'>Sign out</a>";
+    $("so2").onclick = async e => { e.preventDefault(); await sb.auth.signOut(); location.href = location.pathname; };
+    return;
+  }
+  $("who").textContent = session.user.email; $("login").hidden = true; $("app").hidden = false;
+  history.replaceState(null, "", location.pathname);
+  await loadCampaigns();
+}
+sb.auth.onAuthStateChange((ev) => { if (ev === "SIGNED_IN" && $("app").hidden) boot(); });
+
+/* ---------- data ---------- */
+async function loadCampaigns(selectId) {
+  const { data, error } = await sb.from("campaigns").select("*").order("created_at", { ascending: false });
+  if (error) return fail(error, "loading campaigns");
+  campaigns = data;
+  $("campSel").innerHTML = campaigns.map(c => `<option value="${c.id}">${esc(c.name)}${c.status !== "open" ? " (" + c.status + ")" : ""}</option>`).join("");
+  if (!campaigns.length) { camp = null; gifts = []; people = []; resps = []; renderAll(); return; }
+  camp = campaigns.find(c => c.id === (selectId || (camp && camp.id))) || campaigns[0];
+  $("campSel").value = camp.id;
+  await loadCampaign();
+}
+async function loadCampaign() {
+  const [g, p, r] = await Promise.all([
+    sb.from("gifts").select("*").eq("campaign_id", camp.id).order("sort").order("name"),
+    sb.from("invitations").select("*").eq("campaign_id", camp.id).order("created_at"),
+    sb.from("responses").select("*, invitations!inner(name,email,token,campaign_id)").eq("invitations.campaign_id", camp.id).order("submitted_at", { ascending: false })]);
+  if (g.error || p.error || r.error) return fail(g.error || p.error || r.error, "loading this campaign");
+  gifts = g.data; people = p.data; resps = r.data; renderAll();
+}
+$("campSel").onchange = async e => { camp = campaigns.find(c => c.id === e.target.value); $("panel").classList.remove("open"); await loadCampaign(); };
+const giftOf = id => gifts.find(g => g.id === id) || { name: "(removed gift)" };
+const addrText = r => [r.ship_name, r.street + (r.unit ? ", " + r.unit : ""), r.city + ", " + r.state + " " + r.zip].join("\n");
+const hasAddr = r => !!r.street;
+
+/* ---------- render ---------- */
+function renderAll() {
+  $("title").textContent = camp ? camp.name : "No campaign yet";
+  renderStats(); renderResponses(); renderGifts(); renderPeople(); renderSettings();
+}
+function renderStats() {
+  const c = s => resps.filter(r => r.status === s).length;
+  const priced = resps.filter(r => giftOf(r.gift_id).est_price != null);
+  const cost = priced.reduce((a, r) => a + Number(giftOf(r.gift_id).est_price), 0);
+  const costLabel = !resps.length ? "—" : (priced.length ? money(cost) + (priced.length < resps.length ? "+" : "") : "—");
+  const cells = [["Invitations", people.length], ["Responses", resps.length], ["Waiting", people.length - resps.length],
+    ["To order", c("to_order")], ["Ordered", c("ordered")], ["Completed", c("completed")], ["Est. cost" + (camp && camp.budget ? " / " + money(camp.budget) : ""), costLabel]];
+  $("stats").innerHTML = cells.map(([l, n]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
+}
+function renderResponses() {
+  const c = s => resps.filter(r => r.status === s).length;
+  const waiting = people.filter(p => !resps.some(r => r.invitation_id === p.id));
+  const tabs = [["all", "All responses (" + resps.length + ")"], ["to_order", "To Order (" + c("to_order") + ")"], ["ordered", "Ordered (" + c("ordered") + ")"], ["completed", "Completed (" + c("completed") + ")"], ["waiting", "Waiting (" + waiting.length + ")"]];
+  $("tabs").innerHTML = tabs.map(([k, l]) => `<button class="${filter === k ? "on" : ""}" data-k="${k}">${l}</button>`).join("");
+  let html = "";
+  if (filter === "waiting") {
+    html = waiting.filter(p => !q || (p.name + p.email).toLowerCase().includes(q)).map(p => `<tr class="row" data-p="${p.id}"><td><b>${esc(p.name)}</b></td><td colspan="3" class="addr">Invitation sent, no gift picked yet</td><td><span class="pill p-waiting">Not yet responded</span></td><td></td></tr>`).join("");
+  } else {
+    html = resps.filter(r => (filter === "all" || r.status === filter) &&
+      (!q || (r.invitations.name + r.invitations.email + giftOf(r.gift_id).name).toLowerCase().includes(q))).map(r => {
+      const g = giftOf(r.gift_id);
+      return `<tr class="row" data-r="${r.id}"><td><b>${esc(r.invitations.name)}</b></td>
+      <td><div class="gift"><img src="${esc(imgUrl(g.image_url))}" alt=""><span>${esc(g.name)}</span></div></td>
+      <td class="addr">${hasAddr(r) ? esc(r.street) + (r.unit ? ", " + esc(r.unit) : "") + "<br>" + esc(r.city) + ", " + esc(r.state) + " " + esc(r.zip) : "<i>Address deleted</i>"}</td>
+      <td>${fmt(r.submitted_at)}</td><td><span class="pill p-${r.status}">${LABEL[r.status]}</span></td>
+      <td>${g.amazon_url ? `<a class="amz" href="${esc(g.amazon_url)}" target="_blank" rel="noopener noreferrer" data-stop>View on Amazon ↗</a>` : ""}</td></tr>`;
+    }).join("");
+  }
+  $("rows").innerHTML = html || `<tr><td colspan="6" class="empty">${camp ? "Nobody here yet." : "Create a campaign to get started."}</td></tr>`;
+}
+function renderGifts() {
+  $("giftRows").innerHTML = gifts.map(g => `<tr><td><div class="gift"><img src="${esc(imgUrl(g.image_url))}" alt=""><span><b>${esc(g.name)}</b><br><span class="tag">${esc(g.description)}</span></span></div></td>
+   <td>${g.amazon_url ? `<a href="${esc(g.amazon_url)}" target="_blank" rel="noopener noreferrer">Open ↗</a>` : "—"}</td><td>${money(g.est_price)}</td>
+   <td>${g.active ? "Yes" : "<span class='tag'>Hidden</span>"}</td><td><button class="btn ghost sm" data-edit-gift="${g.id}">Edit</button></td></tr>`).join("")
+   || `<tr><td colspan="5" class="empty">No gifts yet. Click “Add a gift”.</td></tr>`;
+}
+function renderPeople() {
+  $("peopleRows").innerHTML = people.map(p => {
+    const done = resps.some(r => r.invitation_id === p.id);
+    return `<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.email)}</td><td>${done ? '<span class="pill p-completed">Picked a gift</span>' : '<span class="pill p-waiting">Waiting</span>'}</td>
+     <td><div class="row-actions"><button class="btn ghost sm" data-copy-link="${p.id}">Copy link</button><a class="btn ghost sm" href="${esc(mailto(p))}">Email invite</a></div></td>
+     <td><button class="danger" data-del-person="${p.id}" style="margin:0">Remove</button></td></tr>`;
+  }).join("") || `<tr><td colspan="5" class="empty">No volunteers yet. Click “Add volunteers”.</td></tr>`;
+}
+function mailto(p) {
+  const first = p.name.split(" ")[0];
+  const body = `Hi ${first},\n\n${camp.message}\n\nPlease choose your gift here (this link is just for you):\n${linkFor(p.token)}\n\nThank you for everything you do,\nScholars Equity Network`;
+  return "mailto:" + encodeURIComponent(p.email) + "?subject=" + encodeURIComponent("A thank-you gift from Scholars Equity Network") + "&body=" + encodeURIComponent(body);
+}
+function renderSettings() {
+  if (!camp) return;
+  $("sName").value = camp.name; $("sMsg").value = camp.message; $("sStatus").value = camp.status; $("sBudget").value = camp.budget ?? "";
+}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".app>aside [data-tab]").forEach(b => b.onclick = () => {
+  tab = b.dataset.tab; document.querySelectorAll(".app>aside [data-tab]").forEach(x => x.classList.toggle("on", x === b));
+  ["responses", "gifts", "people", "settings"].forEach(t => $("t-" + t).hidden = t !== tab); $("panel").classList.remove("open");
+});
+
+/* ---------- detail panel ---------- */
+function openPanel(r) {
+  openId = r.id; const g = giftOf(r.gift_id), p = $("panel");
+  p.innerHTML = `<button class="x" aria-label="Close">×</button><h2>${esc(r.invitations.name)}</h2><div class="em">${esc(r.email || r.invitations.email)} · ${fmt(r.submitted_at)}</div>
+  <div class="pg"><img src="${esc(imgUrl(g.image_url))}" alt=""><div><b>${esc(g.name)}</b>${g.amazon_url ? `<a class="amz" href="${esc(g.amazon_url)}" target="_blank" rel="noopener noreferrer">View on Amazon ↗</a>` : ""}</div></div>
+  ${hasAddr(r) ? `<label>Ship to</label><div class="box">${esc(addrText(r))}</div>
+  <div class="row-actions"><button class="btn" id="cp">📋 Copy address</button><button class="btn ghost" id="cpn">Copy name only</button></div>` : `<p class="note">The address for this person has been deleted.</p>`}
+  <label>Status</label><div class="seg">${["to_order", "ordered", "completed"].map(s => `<button class="${r.status === s ? "on" : ""}" data-s="${s}">${LABEL[s]}</button>`).join("")}</div>
+  <label for="nt">Notes (only you see these)</label><textarea id="nt" rows="3" placeholder="Order number, delivery date…">${esc(r.notes)}</textarea>
+  ${hasAddr(r) ? `<button class="danger" id="del">🗑 Delete this person's address</button>` : ""}`;
+  p.classList.add("open");
+  const cur = () => resps.find(x => x.id === openId);
+  p.querySelector(".x").onclick = () => p.classList.remove("open");
+  if (hasAddr(r)) { $("cp").onclick = () => copy(addrText(cur()), "Address copied"); $("cpn").onclick = () => copy(cur().ship_name, "Name copied"); }
+  p.querySelectorAll(".seg button").forEach(b => b.onclick = async () => {
+    const { error } = await sb.from("responses").update({ status: b.dataset.s }).eq("id", openId);
+    if (error) return fail(error, "saving status");
+    cur().status = b.dataset.s; renderStats(); renderResponses(); openPanel(cur()); toast("Marked " + LABEL[b.dataset.s]);
+  });
+  let t; $("nt").oninput = e => { clearTimeout(t); t = setTimeout(async () => { const { error } = await sb.from("responses").update({ notes: e.target.value }).eq("id", openId); if (error) fail(error, "saving note"); else cur().notes = e.target.value; }, 600); };
+  if ($("del")) $("del").onclick = async () => {
+    if (!confirm("Delete the address for " + r.invitations.name + "? This can't be undone.")) return;
+    await scrub([openId]); openPanel(cur());
+  };
+}
+async function scrub(ids) {
+  const blank = { ship_name: null, email: null, street: null, unit: null, city: null, state: null, zip: null, address_deleted_at: new Date().toISOString() };
+  const { error } = await sb.from("responses").update(blank).in("id", ids);
+  if (error) return fail(error, "deleting addresses");
+  resps.forEach(x => { if (ids.includes(x.id)) Object.assign(x, blank); }); renderResponses(); toast("Address deleted");
+}
+
+/* ---------- clicks ---------- */
+document.addEventListener("click", async e => {
+  const t = e.target;
+  if (t.closest("[data-stop]")) return;
+  if (t.matches("#tabs button")) { filter = t.dataset.k; renderResponses(); return; }
+  const row = t.closest("tr.row");
+  if (row && row.dataset.r) return openPanel(resps.find(x => x.id === row.dataset.r));
+  if (row && row.dataset.p) { const p = people.find(x => x.id === row.dataset.p); return copy(linkFor(p.token), "Invitation link copied for " + p.name); }
+  if (t.dataset.editGift) return giftModal(gifts.find(g => g.id === t.dataset.editGift));
+  if (t.dataset.copyLink) { const p = people.find(x => x.id === t.dataset.copyLink); return copy(linkFor(p.token), "Link copied for " + p.name); }
+  if (t.dataset.delPerson) {
+    const p = people.find(x => x.id === t.dataset.delPerson);
+    if (!confirm("Remove " + p.name + "? Their link will stop working and any gift choice and address they entered will be deleted.")) return;
+    const { error } = await sb.from("invitations").delete().eq("id", p.id); if (error) return fail(error, "removing volunteer");
+    await loadCampaign(); toast("Removed " + p.name);
+  }
+});
+$("q").oninput = e => { q = e.target.value.toLowerCase(); renderResponses(); };
+$("csv").onclick = () => {
+  const rows = [["Name", "Email", "Gift", "Amazon link", "Ship to name", "Street", "Unit", "City", "State", "ZIP", "Submitted", "Status", "Notes"]]
+    .concat(resps.map(r => { const g = giftOf(r.gift_id); return [r.invitations.name, r.email || "", g.name, g.amazon_url || "", r.ship_name || "", r.street || "", r.unit || "", r.city || "", r.state || "", r.zip || "", r.submitted_at, LABEL[r.status], r.notes || ""]; }));
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(",")).join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  a.download = "sen-gift-fulfillment.csv"; a.click();
+};
+
+/* ---------- gifts ---------- */
+function modal(html) { const m = $("modal"); m.className = "modal"; m.innerHTML = "<div>" + html + "</div>"; m.hidden = false; m.onclick = e => { if (e.target === m) closeModal(); }; }
+function closeModal() { $("modal").hidden = true; $("modal").innerHTML = ""; }
+$("addGift").onclick = () => giftModal(null);
+function giftModal(g) {
+  if (!camp) return toast("Create a campaign first");
+  const isNew = !g; g = g || { name: "", description: "", image_url: "", amazon_url: "", est_price: "", active: true, sort: (gifts.length + 1) };
+  modal(`<h3>${isNew ? "Add a gift" : "Edit gift"}</h3>
+  <label for="gName">Name</label><input id="gName" value="${esc(g.name)}" maxlength="80">
+  <label for="gDesc">Short description (volunteers see this)</label><input id="gDesc" value="${esc(g.description)}" maxlength="140">
+  <label for="gAmz">Amazon link (only you see this)</label><input id="gAmz" value="${esc(g.amazon_url)}" placeholder="https://www.amazon.com/dp/…">
+  <div class="grid2"><div><label for="gPrice">Estimated price $ (only you see this)</label><input id="gPrice" type="number" min="0" step="0.01" value="${esc(g.est_price ?? "")}"></div>
+  <div><label for="gSort">Order on the page (1 = first)</label><input id="gSort" type="number" value="${esc(g.sort)}"></div></div>
+  <label>Photo</label><div class="row-actions" style="align-items:center"><img class="thumb" id="gThumb" src="${esc(imgUrl(g.image_url))}" alt=""><input id="gFile" type="file" accept="image/*" style="width:auto"></div>
+  <label for="gImg">…or paste a photo link</label><input id="gImg" value="${esc(g.image_url || "")}" placeholder="https://…">
+  <label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="gActive" style="width:auto" ${g.active ? "checked" : ""}> Show this gift to volunteers</label>
+  <p class="row-actions" style="margin-top:18px"><button class="btn" id="gSave">Save</button><button class="btn ghost" id="gCancel">Cancel</button>${isNew ? "" : `<button class="danger" id="gDel" style="margin-left:auto">Delete gift</button>`}</p>`);
+  $("gCancel").onclick = closeModal;
+  $("gFile").onchange = () => { const f = $("gFile").files[0]; if (f) $("gThumb").src = URL.createObjectURL(f); };
+  $("gSave").onclick = async () => {
+    const name = $("gName").value.trim(); if (!name) return toast("Please add a name");
+    $("gSave").disabled = true; let image_url = $("gImg").value.trim() || null;
+    const f = $("gFile").files[0];
+    if (f) {
+      if (f.size > 5 * 1024 * 1024) { $("gSave").disabled = false; return toast("That photo is over 5 MB. Please use a smaller one."); }
+      const ext = (f.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+      const path = crypto.randomUUID() + "." + ext;
+      const up = await sb.storage.from("gift-images").upload(path, f, { contentType: f.type });
+      if (up.error) { $("gSave").disabled = false; return fail(up.error, "uploading photo"); }
+      image_url = sb.storage.from("gift-images").getPublicUrl(path).data.publicUrl;
+    }
+    const row = { name, description: $("gDesc").value.trim(), amazon_url: $("gAmz").value.trim() || null, est_price: $("gPrice").value === "" ? null : Number($("gPrice").value),
+      sort: Number($("gSort").value) || 0, active: $("gActive").checked, image_url };
+    const { error } = isNew ? await sb.from("gifts").insert({ ...row, campaign_id: camp.id }) : await sb.from("gifts").update(row).eq("id", g.id);
+    $("gSave").disabled = false; if (error) return fail(error, "saving gift");
+    closeModal(); await loadCampaign(); toast("Gift saved");
+  };
+  if (!isNew) $("gDel").onclick = async () => {
+    if (!confirm("Delete “" + g.name + "”? If anyone already picked it, hide it instead.")) return;
+    const { error } = await sb.from("gifts").delete().eq("id", g.id);
+    if (error) return toast("Someone already picked this gift, so it can't be deleted. Untick “Show this gift” instead.");
+    closeModal(); await loadCampaign(); toast("Gift deleted");
+  };
+}
+
+/* ---------- volunteers ---------- */
+$("addPeople").onclick = () => {
+  if (!camp) return toast("Create a campaign first");
+  modal(`<h3>Add volunteers</h3><p class="note">One person per line: <b>Name, email</b>. You can paste a list straight from a spreadsheet.</p>
+  <textarea id="pText" rows="8" placeholder="Jordan Lee, jordan@example.com&#10;Taylor Kim, taylor@example.com"></textarea>
+  <p class="row-actions"><button class="btn" id="pSave">Add them</button><button class="btn ghost" id="pCancel">Cancel</button></p><p class="note" id="pMsg"></p>`);
+  $("pCancel").onclick = closeModal;
+  $("pSave").onclick = async () => {
+    const rows = [], bad = [];
+    $("pText").value.split(/\n/).map(l => l.trim()).filter(Boolean).forEach(l => {
+      const m = l.match(/^(.+?)[,\t;]\s*([^\s,;]+@[^\s,;]+\.[^\s,;]+)\s*$/) || l.match(/^(.+?)\s*<([^>\s]+@[^>\s]+)>\s*$/);
+      m ? rows.push({ campaign_id: camp.id, name: m[1].trim().replace(/^"|"$/g, ""), email: m[2].trim().toLowerCase() }) : bad.push(l);
+    });
+    if (bad.length) { $("pMsg").textContent = "I couldn't read these lines: " + bad.join(" | "); return; }
+    if (!rows.length) { $("pMsg").textContent = "Nothing to add yet."; return; }
+    $("pSave").disabled = true;
+    const { error } = await sb.from("invitations").insert(rows); $("pSave").disabled = false;
+    if (error) return fail(error, "adding volunteers");
+    closeModal(); await loadCampaign(); toast("Added " + rows.length + (rows.length === 1 ? " volunteer" : " volunteers"));
+  };
+};
+$("copyAll").onclick = () => {
+  if (!people.length) return toast("No volunteers yet");
+  copy(people.map(p => p.name + "\t" + p.email + "\t" + linkFor(p.token)).join("\n"), "Copied " + people.length + " links (name, email, link)");
+};
+
+/* ---------- campaigns ---------- */
+$("saveCamp").onclick = async () => {
+  const row = { name: $("sName").value.trim(), message: $("sMsg").value.trim(), status: $("sStatus").value, budget: $("sBudget").value === "" ? null : Number($("sBudget").value) };
+  if (!row.name || !row.message) return toast("Name and message can't be empty");
+  const { error } = await sb.from("campaigns").update(row).eq("id", camp.id); if (error) return fail(error, "saving campaign");
+  await loadCampaigns(camp.id); toast("Saved");
+};
+$("scrubAll").onclick = async () => {
+  const ids = resps.filter(hasAddr).map(r => r.id);
+  if (!ids.length) return toast("No addresses to delete");
+  if (!confirm("Delete " + ids.length + " address(es) from this campaign? This can't be undone.")) return;
+  await scrub(ids);
+};
+$("newCamp").onclick = () => {
+  modal(`<h3>New campaign</h3><label for="nName">Campaign name</label><input id="nName" placeholder="2027 SEN Summit Volunteers">
+  ${camp ? `<label style="display:flex;gap:8px;align-items:center;margin-top:14px"><input type="checkbox" id="nCopy" style="width:auto" checked> Copy the gifts from “${esc(camp.name)}”</label>` : ""}
+  <p class="row-actions" style="margin-top:18px"><button class="btn" id="nSave">Create</button><button class="btn ghost" id="nCancel">Cancel</button></p>`);
+  $("nCancel").onclick = closeModal;
+  $("nSave").onclick = async () => {
+    const name = $("nName").value.trim(); if (!name) return toast("Please name the campaign");
+    const { data, error } = await sb.from("campaigns").insert({ name, status: "draft", message: camp ? camp.message : undefined }).select().single();
+    if (error) return fail(error, "creating campaign");
+    if (camp && $("nCopy") && $("nCopy").checked && gifts.length) {
+      const { error: e2 } = await sb.from("gifts").insert(gifts.map(g => ({ campaign_id: data.id, name: g.name, description: g.description, image_url: g.image_url, amazon_url: g.amazon_url, est_price: g.est_price, active: g.active, sort: g.sort })));
+      if (e2) fail(e2, "copying gifts");
+    }
+    closeModal(); await loadCampaigns(data.id); toast("Campaign created as a draft. Set it to Open when you're ready.");
+  };
+};
+
+boot();
+</script></body></html>
