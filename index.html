@@ -38,6 +38,7 @@
    </div>
    <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
    <p class="err" id="err" role="alert"></p>
+   <p class="fallback" id="fallback" hidden><a id="mailFallback" class="btn-fallback" href="#">✉️ Email it to us instead</a></p>
    <button class="claim" id="claim" type="submit">Send Me My Gift</button>
    <p class="priv">🔒 Your information comes to us by email, and we'll only use it to send your gift. We won't share it or use it for anything else.</p>
    <p class="priv" style="margin-top:6px">For now, we're only able to ship within the U.S.</p>
@@ -120,6 +121,14 @@ $("choose").addEventListener("click", () => {
 });
 $("back").addEventListener("click", e => { e.preventDefault(); show(1); });
 
+
+// Backup if the form service is down: open the volunteer's own email app with everything filled in.
+function showFallback(b) {
+  const lines = ["Gift chosen", "Name", "Street", "Apt/Unit", "City", "State", "ZIP", "Volunteer email", "Note for you"].filter(k => b[k]).map(k => k + ": " + b[k]);
+  $("mailFallback").href = "mailto:" + CONTACT + "?subject=" + encodeURIComponent(b._subject) + "&body=" + encodeURIComponent("Hi SEN,\n\nI'd like to choose this gift:\n\n" + lines.join("\n") + "\n\nThank you!");
+  $("fallback").hidden = false;
+}
+
 $("addr").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target, err = $("err"), btn = $("claim");
@@ -133,7 +142,7 @@ $("addr").addEventListener("submit", async e => {
   if (!v("state")) return bad("state", "Please choose your state.");
   if (!/^\d{5}(-\d{4})?$/.test(v("zip"))) return bad("zip", "Please enter a 5-digit ZIP code, like 98122.");
   if (v("_honey")) { confirmation(chosen, v("email")); return; }          // spam trap: pretend success
-  err.textContent = ""; btn.disabled = true; btn.textContent = "Sending…";
+  err.textContent = ""; $("fallback").hidden = true; btn.disabled = true; btn.textContent = "Sending…";
   const body = {
     "Gift chosen": chosen.name, "Amazon link": chosen.amazon,
     "Name": v("name"), ...(chosen.emailNote ? { "Note for you": chosen.emailNote } : {}), "Street": v("street"), "Apt/Unit": v("unit") || "-", "City": v("city"), "State": v("state"), "ZIP": v("zip"),
@@ -146,8 +155,8 @@ $("addr").addEventListener("submit", async e => {
       method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
     const j = await r.json().catch(() => ({}));
     if (r.ok && String(j.success) === "true") { store("sen-gift", JSON.stringify({ gift: chosen.name, email: v("email") })); confirmation(chosen, v("email")); }
-    else { err.textContent = "We couldn't send that just now. Please try again in a moment."; console.warn("Form service said:", j.message || r.status); }
-  } catch (x) { err.textContent = "We couldn't send that just now. Please check your connection and try again."; }
+    else { err.textContent = "We couldn't send that just now. Please try again in a few minutes, or use the button below."; showFallback(body); console.warn("Form service said:", j.message || r.status); }
+  } catch (x) { err.textContent = "We couldn't send that just now. Please try again in a few minutes, or use the button below."; showFallback(body); }
   btn.disabled = false; btn.textContent = "Send Me My Gift";
 });
 

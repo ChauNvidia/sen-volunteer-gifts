@@ -99,3 +99,6 @@ form .bad{border-color:#c0392b;background:#fff6f5}
 }
 
 .small a{color:var(--blue)}
+
+.fallback{margin:0 0 12px}.btn-fallback{display:block;text-align:center;padding:13px;border:1.5px solid var(--navy);border-radius:12px;color:var(--navy);text-decoration:none;font-weight:600;background:#fff}
+.btn-fallback:hover{background:#eef3ff}
