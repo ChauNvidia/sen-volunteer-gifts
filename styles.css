@@ -97,3 +97,5 @@ form .bad{border-color:#c0392b;background:#fff6f5}
   .body h3{font-size:15px}.body p{font-size:13px}
   .radio{width:22px;height:22px}
 }
+
+.small a{color:var(--blue)}

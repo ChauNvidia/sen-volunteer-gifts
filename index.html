@@ -61,7 +61,8 @@
 // Where responses are emailed. FormSubmit.co forwards each form to this address (no account needed;
 // it asks for a one-time "Activate" click the first time). After activating, you can swap this
 // for the private random code FormSubmit emails you, so your email isn't visible in this file.
-const SEND_TO = "admin@scholarsequity.org";
+const SEND_TO = "danglc@gmail.com";
+const CONTACT = "admin@scholarsequity.org";   // shown to volunteers on the last page (not where responses go)
 // To add, remove, or reorder gifts, edit this list. (Optional "emailNote" adds a reminder line to YOUR email for that gift.) "amazon" goes in YOUR email so you can click straight to it; prices are never shown.
 const GIFTS = [
   { name: "Between the World and Me", desc: "A thought-provoking book by Ta-Nehisi Coates.", img: "0812983815.jpg", amazon: "https://www.amazon.com/dp/0812983815" },
@@ -88,7 +89,8 @@ function confirmation(g, email, again) {
   $("dimg").src = photo(g); $("dimg").alt = g.name;
   $("dline").innerHTML = "We've got your pick: <b></b>. We'll get it ready and send it your way.";
   $("dline").querySelector("b").textContent = g.name;
-  $("dnote").textContent = email ? "If we have any questions, we'll reach out at " + email + "." : "";
+  $("dnote").innerHTML = "Questions? Reach us at <a></a>.";
+  const a = $("dnote").querySelector("a"); a.textContent = CONTACT; a.href = "mailto:" + CONTACT;
   $("dagain").hidden = !again;
   show(3);
 }
@@ -137,7 +139,7 @@ $("addr").addEventListener("submit", async e => {
     "Name": v("name"), ...(chosen.emailNote ? { "Note for you": chosen.emailNote } : {}), "Street": v("street"), "Apt/Unit": v("unit") || "-", "City": v("city"), "State": v("state"), "ZIP": v("zip"),
     "Volunteer email": v("email"), email: v("email"),
     _subject: "Gift choice: " + chosen.name + " (" + v("name") + ")", _template: "table", _captcha: "false",
-    _autoresponse: "Thank you for everything you do! We've got your pick: " + chosen.name + ". We'll get it ready and send it your way. - Scholars Equity Network"
+    _autoresponse: "Thank you for everything you do! We've got your pick: " + chosen.name + ". We'll get it ready and send it your way. Questions? Email " + CONTACT + ". - Scholars Equity Network"
   };
   try {
     const r = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(SEND_TO), {
