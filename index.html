@@ -61,7 +61,7 @@
 // for the private random code FormSubmit emails you, so your email isn't visible in this file.
 const SEND_TO = "danglc@gmail.com";
 const MESSAGE = "Your time, energy, and contributions mean so much to our community. We'd love to send you a small gift as a token of our appreciation.";
-// To add, remove, or reorder gifts, edit this list. "amazon" goes in YOUR email so you can click straight to it; prices are never shown.
+// To add, remove, or reorder gifts, edit this list. (Optional "emailNote" adds a reminder line to YOUR email for that gift.) "amazon" goes in YOUR email so you can click straight to it; prices are never shown.
 const GIFTS = [
   { name: "Between the World and Me", desc: "A powerful, moving read to reflect on.", img: "0812983815.jpg", amazon: "https://www.amazon.com/dp/0812983815" },
   { name: "Tree of Hearts Note Cards", desc: "Pretty cards and envelopes to send someone a note.", img: "1441324607.jpg", amazon: "https://www.amazon.com/dp/1441324607" },
@@ -71,7 +71,7 @@ const GIFTS = [
   { name: "Unicorn Magnet Cars", desc: "Color-changing toy cars, for the kids in your life.", img: "unicorn.jpg", amazon: "https://www.amazon.com/dp/B0D6NCWSX3" },
   { name: "Dandelion Herbal Tea", desc: "A soothing, caffeine-free tea for a quiet moment.", img: "tea.jpg", amazon: "https://www.amazon.com/dp/B0CJJ4G7FF" },
   { name: "Shower Steamers", desc: "Eight scented steamers for a spa moment at home.", img: "steamers.jpg", amazon: "https://www.amazon.com/dp/B0DPQ8BMHM" },
-  { name: "Bookstore Mug", desc: "A cozy mug with a tiny bookshop on it.", img: "bookmug.jpg", amazon: "https://www.amazon.com/dp/B0HMR2PP5B" }
+  { name: "Bookstore Mug", desc: "A cozy mug with a tiny bookshop on it, personalized with your name.", img: "bookmug.jpg", amazon: "https://www.amazon.com/dp/B0HMR2PP5B", emailNote: "PERSONALIZED MUG: put the volunteer's name on it (the name above)." }
 ];
 /* ============================================= */
 
@@ -130,7 +130,7 @@ $("addr").addEventListener("submit", async e => {
   err.textContent = ""; btn.disabled = true; btn.textContent = "Sending…";
   const body = {
     "Gift chosen": chosen.name, "Amazon link": chosen.amazon,
-    "Name": v("name"), "Street": v("street"), "Apt/Unit": v("unit") || "-", "City": v("city"), "State": v("state"), "ZIP": v("zip"),
+    "Name": v("name"), ...(chosen.emailNote ? { "Note for you": chosen.emailNote } : {}), "Street": v("street"), "Apt/Unit": v("unit") || "-", "City": v("city"), "State": v("state"), "ZIP": v("zip"),
     "Volunteer email": v("email"), email: v("email"),
     _subject: "Gift choice: " + chosen.name + " (" + v("name") + ")", _template: "table", _captcha: "false",
     _autoresponse: "Thank you for everything you do! We received your gift selection: " + chosen.name + ". We'll be in touch with updates. - Scholars Equity Network"
