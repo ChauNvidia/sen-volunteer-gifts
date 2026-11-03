@@ -74,6 +74,11 @@ label{font-size:13px;font-weight:500;display:block;margin:12px 0 5px}
     <p>Enter your admin email and we'll send you a sign-in link. No password needed.</p>
     <input id="email" type="email" placeholder="you@example.com" autocomplete="email" aria-label="Admin email">
     <p><button class="btn" id="send" style="width:100%">Email me a sign-in link</button></p>
+    <p class="note" style="margin:6px 0"><a href="#" id="usePw">Use a password instead</a></p>
+    <div id="pwBox" hidden>
+      <input id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+      <p><button class="btn" id="pwGo" style="width:100%">Sign in with password</button></p>
+    </div>
   </div>
   <p id="loginMsg" role="status"></p>
 </div>
@@ -149,6 +154,15 @@ $("send").onclick = async () => {
   $("loginMsg").textContent = error ? "Couldn't send the link. Please try again in a minute." : "Check your email for a sign-in link, then click it.";
 };
 $("email").addEventListener("keydown", e => { if (e.key === "Enter") $("send").click(); });
+$("usePw").onclick = e => { e.preventDefault(); $("pwBox").hidden = false; $("pw").focus(); };
+$("pwGo").onclick = async () => {
+  const email = $("email").value.trim(), password = $("pw").value; if (!email || !password) return;
+  $("pwGo").disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  $("pwGo").disabled = false;
+  if (error) $("loginMsg").textContent = "That email or password didn't work.";
+};
+$("pw").addEventListener("keydown", e => { if (e.key === "Enter") $("pwGo").click(); });
 $("signout").onclick = async () => { await sb.auth.signOut(); location.href = location.pathname; };
 
 async function boot() {
