@@ -50,9 +50,9 @@
 <main class="narrow center">
  <div class="done"><div class="pimg big"><img id="dimg" alt=""></div></div>
  <h1 class="h2">Thank you for everything you do.</h1>
- <p class="lead2">Your gift selection has been received!</p>
- <p class="sel-line">You chose: <b id="dname"></b></p>
+ <p class="lead2" id="dline"></p>
  <p class="small" id="dnote"></p>
+ <p class="again" id="dagain" hidden>We've already received your gift selection. No need to submit it again.</p>
 </main>
 </div>
 
@@ -84,8 +84,11 @@ function show(n) { ["v1", "v2", "v3"].forEach((v, i) => $(v).hidden = (i + 1 !==
 function store(k, v) { try { v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); return localStorage.getItem(k); } catch (e) { return null; } }
 
 function confirmation(g, email, again) {
-  $("dimg").src = photo(g); $("dimg").alt = g.name; $("dname").textContent = g.name;
-  $("dnote").textContent = (again ? "We already have your selection from this device. " : "") + (email ? "We have your details and will be in touch at " + email + ". " : "") + "Thank you for being part of our community.";
+  $("dimg").src = photo(g); $("dimg").alt = g.name;
+  $("dline").innerHTML = "We've got your pick: <b></b>. We'll get it ready and send it your way.";
+  $("dline").querySelector("b").textContent = g.name;
+  $("dnote").textContent = email ? "If we have any questions, we'll reach out at " + email + "." : "";
+  $("dagain").hidden = !again;
   show(3);
 }
 
@@ -133,7 +136,7 @@ $("addr").addEventListener("submit", async e => {
     "Name": v("name"), ...(chosen.emailNote ? { "Note for you": chosen.emailNote } : {}), "Street": v("street"), "Apt/Unit": v("unit") || "-", "City": v("city"), "State": v("state"), "ZIP": v("zip"),
     "Volunteer email": v("email"), email: v("email"),
     _subject: "Gift choice: " + chosen.name + " (" + v("name") + ")", _template: "table", _captcha: "false",
-    _autoresponse: "Thank you for everything you do! We received your gift selection: " + chosen.name + ". We'll be in touch with updates. - Scholars Equity Network"
+    _autoresponse: "Thank you for everything you do! We've got your pick: " + chosen.name + ". We'll get it ready and send it your way. - Scholars Equity Network"
   };
   try {
     const r = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(SEND_TO), {
