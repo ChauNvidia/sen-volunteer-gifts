@@ -63,6 +63,7 @@
 // it asks for a one-time "Activate" click the first time). After activating, you can swap this
 // for the private random code FormSubmit emails you, so your email isn't visible in this file.
 const SEND_TO = "danglc@gmail.com";
+const FORM_URL = "";   // address of the SEN Google script (see apps-script/README.md). When set, responses go through Google.
 const CONTACT = "admin@scholarsequity.org";   // shown to volunteers on the last page (not where responses go)
 // To add, remove, or reorder gifts, edit this list. (Optional "emailNote" adds a reminder line to YOUR email for that gift.) "amazon" goes in YOUR email so you can click straight to it; prices are never shown.
 const GIFTS = [
@@ -150,12 +151,23 @@ $("addr").addEventListener("submit", async e => {
     _subject: "Gift choice: " + chosen.name + " (" + v("name") + ")", _template: "table", _captcha: "false",
     _autoresponse: "Thank you for everything you do! We've got your pick: " + chosen.name + ". We'll get it ready and send it your way. Questions? Email " + CONTACT + ". - Scholars Equity Network"
   };
+  const payload = { honey: v("_honey"), gift: chosen.name, amazon: chosen.amazon, note: chosen.emailNote || "", name: v("name"), email: v("email"),
+    street: v("street"), unit: v("unit"), city: v("city"), state: v("state"), zip: v("zip") };
   try {
-    const r = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(SEND_TO), {
-      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
-    const j = await r.json().catch(() => ({}));
-    if (r.ok && String(j.success) === "true") { store("sen-gift", JSON.stringify({ gift: chosen.name, email: v("email") })); confirmation(chosen, v("email")); }
-    else { err.textContent = "We couldn't send that just now. Please try again in a few minutes, or use the button below."; showFallback(body); console.warn("Form service said:", j.message || r.status); }
+    let ok = false, why = "";
+    if (FORM_URL) {
+      // Plain-text POST to the SEN Google script (avoids browser pre-checks that Google web apps can't answer)
+      const r = await fetch(FORM_URL, { method: "POST", body: JSON.stringify(payload) });
+      const j = await r.json().catch(() => ({}));
+      ok = j.ok === true; why = j.error || r.status;
+    } else {
+      const r = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(SEND_TO), {
+        method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
+      const j = await r.json().catch(() => ({}));
+      ok = r.ok && String(j.success) === "true"; why = j.message || r.status;
+    }
+    if (ok) { store("sen-gift", JSON.stringify({ gift: chosen.name, email: v("email") })); confirmation(chosen, v("email")); }
+    else { err.textContent = "We couldn't send that just now. Please try again in a few minutes, or use the button below."; showFallback(body); console.warn("Sending failed:", why); }
   } catch (x) { err.textContent = "We couldn't send that just now. Please try again in a few minutes, or use the button below."; showFallback(body); }
   btn.disabled = false; btn.textContent = "Send Me My Gift";
 });
