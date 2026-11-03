@@ -59,3 +59,19 @@ form .bad{border-color:#c0392b;background:#fff6f5}
 .note-img{justify-self:center;width:100%;max-width:470px}
 .note-img img{display:block;width:100%;height:auto;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 9%,#000 91%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 9%,#000 91%,transparent);mask-composite:intersect}
 @media(max-width:900px){.note-img{max-width:360px}}
+
+/* fix: product photo must stay inside its box at every width */
+.pimg{display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pimg img{width:auto;height:auto;max-width:100%;max-height:308px;object-fit:contain}
+.pimg.big img{max-height:268px}
+@media(max-width:820px){.pimg img{max-height:208px}.pimg.big img{max-height:268px}}
+.pick h2,.pick p{position:relative}
+
+/* phones: nothing may be wider than the screen */
+.two>*,.row3>*,form,.pick{min-width:0}
+@media(max-width:560px){
+  header{padding:16px 20px}header small{display:none}
+  .row3{grid-template-columns:1fr 1fr}.row3 label:first-child{grid-column:1/-1}
+  .narrow{padding:6px 20px 50px}.h2{font-size:30px}.grid{padding:0 20px 40px}
+  .hero{padding:20px 20px 50px}h1{font-size:40px}.cta button{width:calc(100% - 40px)}
+}
