@@ -139,7 +139,7 @@ $("addr").addEventListener("submit", async e => {
 });
 
 (async function start() {
-  if (!TOKEN) return message("This link doesn't look right", "Please use the personal link from your invitation.");
+  if (!TOKEN) { location.replace("gifts/"); return; }
   try {
     const d = await rpc("get_invitation", { p_token: TOKEN });
     if (d.state === "not_found") return message("This link doesn't look right", "Please check the link in your invitation, or reach out to SEN for help.");

@@ -3,7 +3,11 @@
 A thank-you gift site for volunteers. Volunteers open a personal link, pick one gift, and enter a shipping address.
 The admin dashboard shows every response so gifts can be bought on Amazon and tracked.
 
-## How it fits together
+## Two versions live here
+- **Email version (the one in use): `gifts/index.html`.** One shared link. Each response is emailed to the address in `SEND_TO` (via FormSubmit.co, no account). Gifts are a list at the top of that file.
+- **Database version (parked): `index.html?t=...` + `admin/` + `schema.sql`.** Personal links and a dashboard. Admin sign-in was not finished.
+
+## How the database version fits together
 - `index.html`        the volunteer pages (gift choice, address form, confirmation). URL: `/?t=<personal token>`
 - `admin/index.html`  the private dashboard (sign in with an emailed link)
 - `config.js`         the database address + public key (safe to be public)
