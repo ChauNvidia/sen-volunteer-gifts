@@ -55,3 +55,7 @@ form .bad{border-color:#c0392b;background:#fff6f5}
 .status-card h1{font-family:Newsreader,serif;font-size:36px;color:var(--navy)}
 .status-card p{color:var(--mute);font-size:17px;line-height:1.5}
 .hi{font-size:15px;color:var(--blue);font-weight:600;margin:0 0 10px}
+
+.note-img{justify-self:center;width:100%;max-width:470px}
+.note-img img{display:block;width:100%;height:auto;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 9%,#000 91%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 9%,#000 91%,transparent);mask-composite:intersect}
+@media(max-width:900px){.note-img{max-width:360px}}
