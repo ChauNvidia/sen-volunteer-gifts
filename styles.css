@@ -87,3 +87,13 @@ form .bad{border-color:#c0392b;background:#fff6f5}
 .lead2 b{color:var(--navy)}
 
 [hidden]{display:none!important}
+
+/* big screens: 5 across (two rows of five for ten gifts) */
+@media(min-width:1180px){
+  .grid{gap:18px}
+  .card{flex-basis:calc((100% - 72px)/5)}
+  .ph{height:160px}.photo img{max-height:140px}
+  .body{padding:14px 14px 16px;gap:8px}
+  .body h3{font-size:15px}.body p{font-size:13px}
+  .radio{width:22px;height:22px}
+}
