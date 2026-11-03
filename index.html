@@ -10,10 +10,11 @@
 <div id="v1">
 <section class="hero">
   <div class="note-img"><img src="images/thank-you-card.png" alt="A handwritten thank-you card resting in a kraft envelope"></div>
-  <div><h1>You've Made<br>a Difference</h1><div class="u"></div>
-  <p id="msg"></p>
-  <p><b>Please choose one item below that you'd like to receive.</b></p></div>
+  <div><h1>Thank You for<br>Being Part of SEN</h1><div class="u"></div>
+  <p>SEN is built by people who believe in showing up for one another. Whether you've shared your time, expertise, or resources, you've helped make this community what it is.</p>
+  <p>We'd love to send you a small gift as a thank-you.</p></div>
 </section>
+<p class="gift-intro">We picked out a few little things we thought you might enjoy. Choose whichever one makes you smile.</p>
 <section class="grid" id="grid" aria-label="Gift options"></section>
 <div class="cta"><button id="choose" disabled>Choose This Gift →</button><p id="hint">Pick one gift above to continue.<br>Takes about two minutes.</p></div>
 </div>
@@ -24,8 +25,8 @@
  <div class="two">
   <div class="pick"><div class="pimg"><img id="pimg" alt=""></div><h2 id="pname"></h2><p id="pdesc"></p></div>
   <form id="addr" novalidate>
-   <h1 class="h2">Where should we send it?</h1>
-   <p class="lead2">Please share your information below so we can send your gift. This will only be used for gift delivery.</p>
+   <h1 class="h2">Where should we send your gift?</h1>
+   <p class="lead2">Share your mailing address below, and we'll send your gift your way. We'll only use this information to get it to you.</p>
    <label>Full name<input name="name" autocomplete="name" required maxlength="100" placeholder="Your name"></label>
    <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="200" placeholder="you@example.com"></label>
    <label>Street address<input name="street" autocomplete="address-line1" required maxlength="120" placeholder="Street address"></label>
@@ -37,8 +38,9 @@
    </div>
    <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
    <p class="err" id="err" role="alert"></p>
-   <button class="claim" id="claim" type="submit">🎁 Claim My Gift</button>
-   <p class="priv">🔒 Your information is sent to SEN by email and used only to send your appreciation gift. We don't share it or use it for anything else. U.S. addresses only for now.</p>
+   <button class="claim" id="claim" type="submit">Send Me My Gift</button>
+   <p class="priv">🔒 Your information comes to us by email, and we'll only use it to send your gift. We won't share it or use it for anything else.</p>
+   <p class="priv" style="margin-top:6px">For now, we're only able to ship within the U.S.</p>
   </form>
  </div>
 </main>
@@ -60,25 +62,23 @@
 // it asks for a one-time "Activate" click the first time). After activating, you can swap this
 // for the private random code FormSubmit emails you, so your email isn't visible in this file.
 const SEND_TO = "danglc@gmail.com";
-const MESSAGE = "Your time, energy, and contributions mean so much to our community. We'd love to send you a small gift as a token of our appreciation.";
 // To add, remove, or reorder gifts, edit this list. (Optional "emailNote" adds a reminder line to YOUR email for that gift.) "amazon" goes in YOUR email so you can click straight to it; prices are never shown.
 const GIFTS = [
-  { name: "Between the World and Me", desc: "A powerful, moving read to reflect on.", img: "0812983815.jpg", amazon: "https://www.amazon.com/dp/0812983815" },
-  { name: "Tree of Hearts Note Cards", desc: "Pretty cards and envelopes to send someone a note.", img: "1441324607.jpg", amazon: "https://www.amazon.com/dp/1441324607" },
-  { name: "Hummingbird Pop-Up Card", desc: "A paper flower bouquet that springs open.", img: "hummingbird.jpg", amazon: "https://www.amazon.com/dp/B0DSCMBNSS" },
-  { name: "Astronaut Mug", desc: "A dark-blue space mug with a lid and spoon.", img: "mug.jpg", amazon: "https://www.amazon.com/dp/B09VBPYLKC" },
-  { name: "Dim Sum Pop-Up Card", desc: "A playful pop-up card that brings a smile.", img: "dimsum.jpg", amazon: "https://www.amazon.com/dp/B0DKF9M3G1" },
-  { name: "Unicorn Magnet Cars", desc: "Color-changing toy cars, for the kids in your life.", img: "unicorn.jpg", amazon: "https://www.amazon.com/dp/B0D6NCWSX3" },
-  { name: "Dandelion Herbal Tea", desc: "A soothing, caffeine-free tea for a quiet moment.", img: "tea.jpg", amazon: "https://www.amazon.com/dp/B0CJJ4G7FF" },
-  { name: "Shower Steamers", desc: "Eight scented steamers for a spa moment at home.", img: "steamers.jpg", amazon: "https://www.amazon.com/dp/B0DPQ8BMHM" },
-  { name: "Bookstore Mug", desc: "A cozy mug with a tiny bookshop on it, personalized with your name.", img: "bookmug.jpg", amazon: "https://www.amazon.com/dp/B0HMR2PP5B", emailNote: "PERSONALIZED MUG: put the volunteer's name on it (the name above)." }
+  { name: "Between the World and Me", desc: "A thought-provoking book by Ta-Nehisi Coates.", img: "0812983815.jpg", amazon: "https://www.amazon.com/dp/0812983815" },
+  { name: "Tree of Hearts Note Cards", desc: "A little something to help you send a thoughtful note.", img: "1441324607.jpg", amazon: "https://www.amazon.com/dp/1441324607" },
+  { name: "Hummingbird Pop-Up Card", desc: "A pop-up bouquet with a few hummingbirds tucked in.", img: "hummingbird.jpg", amazon: "https://www.amazon.com/dp/B0DSCMBNSS" },
+  { name: "Astronaut Mug", desc: "A space-themed mug with a lid, for when you need a little more space.", img: "mug.jpg", amazon: "https://www.amazon.com/dp/B09VBPYLKC" },
+  { name: "Dim Sum Pop-Up Card", desc: "A little dim sum surprise for someone you love.", img: "dimsum.jpg", amazon: "https://www.amazon.com/dp/B0DKF9M3G1" },
+  { name: "Unicorn Magnet Cars", desc: "Something fun for the kids in your life.", img: "unicorn.jpg", amazon: "https://www.amazon.com/dp/B0D6NCWSX3" },
+  { name: "Dandelion Herbal Tea", desc: "A little something for a quiet moment.", img: "tea.jpg", amazon: "https://www.amazon.com/dp/B0CJJ4G7FF" },
+  { name: "Shower Steamers", desc: "Turn your next shower into a little spa moment.", img: "steamers.jpg", amazon: "https://www.amazon.com/dp/B0DPQ8BMHM" },
+  { name: "Bookstore Mug", desc: "A cozy bookshop mug, personalized with your name.", img: "bookmug.jpg", amazon: "https://www.amazon.com/dp/B0HMR2PP5B", emailNote: "PERSONALIZED MUG: put the volunteer's name on it (the name above)." }
 ];
 /* ============================================= */
 
 const $ = id => document.getElementById(id);
 const STATES = "AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" ");
 $("addr").state.insertAdjacentHTML("beforeend", STATES.map(s => `<option>${s}</option>`).join(""));
-$("msg").textContent = MESSAGE;
 const photo = g => "images/gifts/" + g.img;
 function show(n) { ["v1", "v2", "v3"].forEach((v, i) => $(v).hidden = (i + 1 !== n)); window.scrollTo(0, 0); }
 function store(k, v) { try { v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); return localStorage.getItem(k); } catch (e) { return null; } }
@@ -142,7 +142,7 @@ $("addr").addEventListener("submit", async e => {
     if (r.ok && String(j.success) === "true") { store("sen-gift", JSON.stringify({ gift: chosen.name, email: v("email") })); confirmation(chosen, v("email")); }
     else { err.textContent = "We couldn't send that just now. Please try again in a moment."; console.warn("Form service said:", j.message || r.status); }
   } catch (x) { err.textContent = "We couldn't send that just now. Please check your connection and try again."; }
-  btn.disabled = false; btn.textContent = "🎁 Claim My Gift";
+  btn.disabled = false; btn.textContent = "Send Me My Gift";
 });
 
 // Someone returning on the same device sees their confirmation instead of picking again.

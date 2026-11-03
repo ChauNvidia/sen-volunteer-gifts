@@ -75,3 +75,10 @@ form .bad{border-color:#c0392b;background:#fff6f5}
   .narrow{padding:6px 20px 50px}.h2{font-size:30px}.grid{padding:0 20px 40px}
   .hero{padding:20px 20px 50px}h1{font-size:40px}.cta button{width:calc(100% - 40px)}
 }
+
+/* intro line above the gifts */
+.gift-intro{text-align:center;font-size:20px;line-height:1.5;color:var(--ink);max-width:640px;margin:0 auto;padding:30px 24px 28px}
+.hero:has(+ .gift-intro){padding-bottom:36px}
+.gift-intro + .grid{margin-top:0}
+
+.h2,.gift-intro,.hero h1{text-wrap:balance}
