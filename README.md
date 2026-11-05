@@ -1,37 +1,24 @@
 # SEN Volunteer Gifts
 
-A thank-you gift site for volunteers. Volunteers open a personal link, pick one gift, and enter a shipping address.
-The admin dashboard shows every response so gifts can be bought on Amazon and tracked.
+A thank-you gift site for volunteers. One shared link: a volunteer picks a gift, enters a shipping address, and the response is emailed to SEN.
 
-## Two versions live here
-- **Email version (the one in use): the main page, `index.html`.** One shared link. Each response is emailed to the address in `SEND_TO` (via FormSubmit.co, no account). Gifts are a list at the top of `index.html`.
-- **Database version (parked): `db/index.html?t=...` + `admin/` + `schema.sql`.** Personal links and a dashboard. Admin sign-in was not finished.
+## How it works (the version in use)
+- `index.html`   the whole volunteer page. The gift list is at the top of the file.
+- The form posts to a small Google Apps Script (see `apps-script/`), which emails the response to SEN and sends the volunteer a confirmation. The script keeps no list of volunteers.
+- The real "send to" address lives only in a private copy of the script, kept outside this repo. The copy in `apps-script/` has a placeholder.
 
-## How the database version fits together
-- `index.html`        the volunteer pages (gift choice, address form, confirmation). URL: `/?t=<personal token>`
-- `admin/index.html`  the private dashboard (sign in with an emailed link)
-- `config.js`         the database address + public key (safe to be public)
-- `styles.css`        volunteer-page styling
-- `schema.sql`        the database setup (run once in Supabase > SQL Editor)
-- `images/`           logo and the starter gift photos
+## Parked database version (removed from the live site)
+An earlier version used a Supabase database with personal links and an admin dashboard. The `admin/` and `db/` pages were removed from the live site on Nov 4, 2026 because they were unused. They are still in the git history (last present at commit `d080c1b`). `schema.sql` and `config.js` are kept for reference.
 
-## Where the data lives
-In a Supabase database. Privacy is enforced by the database itself (row-level security):
-- Only emails listed in the `admins` table can read or change anything directly.
-- Volunteers can only use two safe functions, `get_invitation` and `claim_gift`, and only with their own secret token.
-- Volunteers never receive prices, Amazon links, or anyone else's information.
-- One claim per invitation (database-enforced).
-
-## Everyday tasks (all in the dashboard)
-- Add / edit gifts: Gifts tab. Photos can be uploaded.
-- New campaign: "New campaign" (can copy the gifts from another campaign). Campaigns start as Draft; set to Open in the Campaign tab.
-- Add volunteers: Volunteers tab, paste "Name, email" lines. Copy their link or open a ready-made email.
-- Fulfil: Responses tab, click a row, "View on Amazon", "Copy address", then mark Ordered / Completed.
-- Privacy cleanup: "Delete this person's address", or "Delete all addresses" in the Campaign tab.
-- Add another admin: in Supabase SQL Editor run `insert into public.admins (email) values ('name@example.com');`
+## Files
+- `index.html`    the volunteer page
+- `styles.css`    page styling
+- `images/`       logo, thank-you card, gift photos
+- `apps-script/`  the email script (placeholder address) and setup notes
+- `CNAME`         the custom domain (thanks.scholarsequity.org)
 
 ## Rules for anyone editing this with Claude
-- Never put a Supabase "service_role" or secret key in this repo. The public/publishable key in `config.js` is fine.
-- Don't log addresses or put personal data in URLs. The only thing in a URL is the random token.
+- Never put a secret key or a real personal email address in this repo. It is public.
+- Don't log addresses or put personal data in URLs.
 - Keep the Amazon purchase manual. Do not automate purchases or collect payment details.
 - Hosted as static files on GitHub Pages; there is no server to maintain.
